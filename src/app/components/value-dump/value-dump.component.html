@@ -1,0 +1,6 @@
+<app-array-dump *ngIf="contentType === 'array' || (contentType === 'object' && _isArray)" [content]="content"></app-array-dump>
+<app-object-dump *ngIf="contentType === 'object' && !_isArray" [content]="content"></app-object-dump>
+{{(contentType !== 'array' && contentType !== 'object') ? (contentType === 'boolean' ? (content ? 'True' : 'False') : (content ? ((contentType !== 'string' || !isRoot) ? content : '') : 'Null')) : '' }}
+<pre *ngIf="contentType === 'string' && isRoot">{{content}}</pre>
+
+

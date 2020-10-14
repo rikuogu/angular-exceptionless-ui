@@ -1,0 +1,71 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm">
+    <div class="col" appRefreshOn [refreshOn]="'OrganizationChanged'" (refreshAction)="getOrganizations()" [refreshThrottle]="10000">
+        <div class="wrapper-md">
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-asterisk"></i> {{ 'Project Information' | translate }}</div>
+                <div class="panel-body">
+                    <form name="form" role="form" class="form-validation" #form="ngForm" (ngSubmit)="add(form)">
+                        <div class="form-group" *ngIf="hasOrganizations()">
+                            <label for="organization">{{ 'Organization Name' | translate }}</label>
+
+                            <select class="form-control" name="organization" id="organization" [(ngModel)]="currentOrganization">
+                                <option *ngFor="let organization of organizations" [ngValue]="organization">{{ organization['name'] }}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" *ngIf="canCreateOrganization()">
+                            <div [ngClass]="{'input-group': !!form.pending }">
+                                <input name="organizationName" type="text" class="form-control" placeholder="{{ 'New Organization Name' | translate }}"
+                                       [(ngModel)]="organizationName"
+                                       appUniqueOrganization
+                                       ng-required="canCreateOrganization()"
+                                       #organizationName="ngModel"
+                                       required
+                                       autofocus />
+
+                                <span class="input-group-addon" *ngIf="form.pending">
+                                    <i class="fa fa-fw fa-spinner fa-spin"></i>
+                                </span>
+                            </div>
+
+                            <div class="error" *ngIf="(organizationName.invalid && (organizationName.dirty || organizationName.touched)) || submitted">
+                                <small [hidden]="!organizationName.errors?.required">{{ 'Organization Name is required.' | translate }}</small>
+                                <small [hidden]="!organizationName.errors?.uniqueOrganization">{{ 'A organizations with this name already exists.' | translate }}</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectName">Project Name</label>
+                            <div [ngClass]="{'input-group': !!form.pending }">
+                                <input id="projectName" name="projectName" type="text" class="form-control" placeholder="New Project Name"
+                                       [(ngModel)]="projectName"
+                                       [appUniqueProject]="currentOrganization['id']"
+                                       organization-id="currentOrganization.id"
+                                       required
+                                       #projectName="ngModel"
+                                       autofocus />
+
+                                <span class="input-group-addon" *ngIf="form.pending">
+                                    <i class="fa fa-fw fa-spinner fa-spin"></i>
+                                </span>
+                            </div>
+
+                            <div class="error" *ngIf="(projectName.invalid && (projectName.dirty || projectName.touched)) || submitted">
+                                <small [hidden]="!projectName.errors?.required">{{ 'Project Name is required.' | translate }}</small>
+                                <small [hidden]="!projectName.errors?.uniqueProject">{{ 'A project with this name already exists.' | translate }}</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <footer class="panel-footer">
+                    <div class="pull-right">
+                        <a routerLink="/dashboard" *ngIf="hasOrganizations()" class="btn btn-default" role="button">{{ 'Go To Dashboard' | translate }}</a>
+                    </div>
+                    <div class="clearfix">
+                        <input type="submit" role="button" class="btn btn-primary" value="{{ 'Add Project' | translate }}" />
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>

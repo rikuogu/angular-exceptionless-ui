@@ -1,0 +1,14 @@
+var environment = {
+    BASE_URL: 'http://localhost:5000',
+    EXCEPTIONLESS_API_KEY: '',
+    EXCEPTIONLESS_SERVER_URL: '',
+    FACEBOOK_APPID: '',
+    GITHUB_APPID: '',
+    GOOGLE_APPID: '',
+    INTERCOM_APPID: '',
+    LIVE_APPID: '',
+    SLACK_APPID: '',
+    STRIPE_PUBLISHABLE_KEY: '',
+    SYSTEM_NOTIFICATION_MESSAGE: '',
+    ENABLE_ACCOUNT_CREATION: true
+};

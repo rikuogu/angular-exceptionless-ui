@@ -1,0 +1,57 @@
+<nav class="app-header navbar navbar-default bg-black">
+    <div class="bg-black primary-underline">
+        <div class="navbar-header">
+            <button type="button" role="button" class="pull-right visible-xs dk" ui-toggle-class="show" data-toggle="collapse" data-target=".navbar-collapse" (click)="toggleResponsiveNav()">
+                <i class="fa fa-fw fa-cog"></i>
+            </button>
+            <button type="button" role="button" class="pull-right visible-xs" ui-toggle-class="off-screen" data-target=".app-aside" appUiScroll="app" (click)="toggleResponsiveSide()">
+                <i class="fa fa-fw fa-align-justify"></i>
+            </button>
+            <a class="navbar-brand text-lt" routerLink="/dashboard">
+                <img src="assets/img/touch-icon-ipad-114.png" alt="exceptionless" class="icon">
+                <img src="assets/img/exceptionless-logo.png" alt="exceptionless" class="hidden-folded">
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse no-shadow">
+            <div class="nav navbar-nav navbar-left hidden-xs">
+                <a class="btn no-shadow navbar-btn" role="button" (click)="toggleSideNavCollapsed()">
+                    <i class="fa fa-dedent fa-fw"></i>
+                </a>
+            </div>
+
+            <app-project-filter></app-project-filter>
+
+            <app-date-filter></app-date-filter>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs" auto-active>
+                <li class="dropdown" open>
+                    <a class="dropdown-toggle profile-image" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img *ngIf="user" class="img-thumbnail" ngxGravatar [email]="user.email_address" [round]="false" [size]="35" [style]="gravatarStyle"/>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a routerLink="/account/manage"><i class="fa fa-user fa-fw"></i> {{ 'My Account' | translate }}</a></li>
+                        <li><a *ngIf="canChangePlan()"><i class="fa fa-credit-card fa-fw"></i> {{ 'Change Plan' | translate }}</a></li>
+                        <li><a routerLink="/account/manage" [queryParams]="{tab: 'password'}"><i class="fa fa-lock fa-fw"></i> {{ 'Change Password' | translate }}</a></li>
+                        <li><a href="https://github.com/exceptionless/Exceptionless/wiki" target="_blank"><i class="fa fa-book fa-fw"></i> {{ 'Documentation' | translate }}</a></li>
+                        <li><a *ngIf="isIntercomEnabled()" (click)="showIntercom()"><i class="fa fa-comment fa-fw"></i> {{ 'Support' | translate }}</a></li>
+                        <li><a (click)="logout();"><i class="fa fa-power-off fa-fw"></i> {{ 'Logout' | translate }}</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <app-search-filter></app-search-filter>
+
+            <ul class="nav navbar-nav visible-xs hidden-sm" auto-active>
+                <li><a routerLink="/account/manage"><i class="fa fa-user fa-fw"></i> {{ 'My Account' | translate }}</a></li>
+                <li><a *ngIf="canChangePlan()"><i class="fa fa-credit-card fa-fw"></i> {{ 'Change Plan' | translate }}</a></li>
+                <li><a routerLink="/account/manage" [queryParams]="{tab: 'password'}"><i class="fa fa-lock fa-fw"></i> {{ 'Change Password' | translate }}</a></li>
+                <li><a href="https://github.com/exceptionless/Exceptionless/wiki" target="_blank"><i class="fa fa-book fa-fw"></i> {{ 'Documentation' | translate }}</a></li>
+                <li><a *ngIf="isIntercomEnabled()" (click)="showIntercom()"><i class="fa fa-comment fa-fw"></i> {{ 'Support' | translate }}</a></li>
+                <li><a (click)="logout();"><i class="fa fa-power-off fa-fw"></i> {{ 'Logout' | translate }}</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+

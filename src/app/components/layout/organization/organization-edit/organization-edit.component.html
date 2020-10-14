@@ -1,0 +1,95 @@
+<app-organization-notification></app-organization-notification>
+
+<div class="hbox hbox-auto-xs hbox-auto-sm" appRefreshOn [refreshOn]="'OrganizationChanged'" (refreshAction)="get()" [refreshDebounce]="5000">
+    <div class="col">
+        <div class="wrapper-md">
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-th-list"></i> {{ 'Manage Organization' | translate }} {{ organization['name'] ? ' "' + organization['name'] + '"' : ''}}</div>
+                <div class="panel-body m-b-n">
+                    <ngb-tabset class="tab-container" [activeId]="activeTab">
+                        <ngb-tab title="{{ 'General' | translate }}" id="general">
+                            <ng-template ngbTabContent>
+                                <form name="organizationForm" role="form" class="form-validation" #organizationForm="ngForm">
+                                    <div class="form-group m-b-none">
+                                        <label for="name">{{ 'Organization Name' | translate }}</label>
+                                        <div [ngClass]="{'input-group': !!organizationForm.pending }">
+                                            <input id="name" name="name" type="text" class="form-control" placeholder="Organization Name"
+                                                   [(ngModel)]="organization.name"
+                                                   (input)="save(organizationForm.valid)"
+                                                   organization-name-available-validator
+                                                   required
+                                                   #name="ngModel"
+                                                   autofocus />
+                                            <span class="input-group-addon" *ngIf="organizationForm.pending">
+                                                <i class="fa fa-fw fa-spinner fa-spin"></i>
+                                            </span>
+                                        </div>
+
+                                        <div class="error" *ngIf="(name.invalid && (name.dirty || name.touched)) || organizationForm.submitted">
+                                            <small [hidden]="!name.errors?.required">{{ 'Organization Name is required.' | translate }}</small>
+
+                                            <!-- TODO:YAG organizationUnique?
+                                            <small [hidden]="organizationUnique">{{ 'A organizations with this name already exists.' | translate }}</small>
+                                            -->
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <div [hidden]="!hasMonthlyUsage">
+                                    <h4 style="margin-top: 20px;">{{ 'Monthly Usage' | translate }}</h4>
+                                    <p>
+                                        You are currently on the <a *ngIf="canChangePlan" (click)="changePlan()"><strong>{{ organization['plan_name'] }}</strong> plan</a> with
+                                        <b [ngClass]="{'text-warning': remainingEventLimit === 0}">{{ remainingEventLimit }}</b> events remaining until this billing period's limit is reset on <b>{{ nextBillingDate }}</b> (<app-timeago [date]="nextBillingDate"></app-timeago>).
+                                        <a *ngIf="canChangePlan" (click)="changePlan()">{{ 'Click here to change your plan or billing information.' | translate }}</a>
+                                    </p>
+                                    <!--<app-rickshaw [options]="chart['options']" [seriesData]="seriesData" [features]="chart['features']"></app-rickshaw>-->
+                                    <app-apexchart [options]="apexChart.options" [seriesData]="apexChart.seriesData"></app-apexchart>
+                                    <br class="clearfix" />
+                                    <h6><em>{{ 'The usage data above is refreshed periodically and may not reflect current totals.' | translate }}</em></h6>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+
+                        <ngb-tab title="{{ 'Projects' | translate }}" id="projects">
+                            <ng-template ngbTabContent>
+                                <app-projects [settings]="projects"></app-projects>
+                                <a routerLink="/project/add" class="btn btn-primary m-t" role="button">{{ 'Add New Project' | translate }}</a>
+                            </ng-template>
+                        </ngb-tab>
+
+                        <ngb-tab title="{{ 'UserManager' | translate }}" id="user-manager">
+                            <ng-template ngbTabContent>
+                                <app-user [settings]="users"></app-user>
+                                <button type="button" role="button" (click)="addUser()" class="btn btn-primary m-t">{{ 'Invite User' | translate }}</button>
+                            </ng-template>
+                        </ngb-tab>
+
+                        <ngb-tab title="{{ 'Billing' | translate }}" id="billing">
+                            <ng-template ngbTabContent>
+                                <p><span [innerHtml]="'Organization_Billing_Plan' | translate:{planName: organization.plan_name}"></span> <a *ngIf="canChangePlan" (click)="changePlan()">{{ 'Change your plan or billing information.' | translate }}</a></p>
+                                <app-invoices [settings]="invoices"></app-invoices>
+                            </ng-template>
+                        </ngb-tab>
+                    </ngb-tabset>
+                </div>
+
+                <footer class="panel-footer">
+                    <div class="pull-right">
+                        <a routerLink="/organization/{{organization['id']}}/dashboard" class="btn btn-default" role="button">{{ 'Go To Dashboard' | translate }}</a>
+                    </div>
+                    <div class="btn-group" open>
+                        <button type="button" role="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-fw fa-remove"></i> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <!-- TODO:YAG authUser?
+                            <li><a (click)="leaveOrganization(authUser)" role="button">{{ 'Leave Organization' | translate }}</a></li>
+                            -->
+                            <li><a (click)="removeOrganization()" role="button">{{ 'Delete Organization' | translate }}</a></li>
+                        </ul>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+<app-organization-notification></app-organization-notification>
+
+<div class="hbox hbox-auto-xs hbox-auto-sm" appRefreshOn [refreshOn]="'PersistentEventChanged PlanChanged'" (refreshAction)="getStats($event)" [refreshThrottle]="10000">
+    <div class="col" appRefreshOn [refreshOn]="'FilterChanged'" (refreshAction)="get()">
+        <div class="wrapper-md">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row row-sm text-center">
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <a routerLink="/type/{{ type }}/recent" class="dashboard-block">
+                                <div class="rotate">
+                                    <i class="fa fa-calendar fa-4x"></i>
+                                </div>
+                                <div class="details">
+                                    <span class="title">{{ 'Count' | translate }}</span>
+                                    <span class="sub">{{ stats.count | number }}</span>
+                                </div>
+                                <i class="fa fa-chevron-right fa-2x more"></i>
+                            </a>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <a routerLink="/type/{{ type }}/frequent" class="dashboard-block">
+                                <div class="rotate">
+                                    <i class="fa fa-key fa-4x"></i>
+                                </div>
+                                <div class="details">
+                                    <span class="title">{{ 'Unique' | translate }}</span>
+                                    <span class="sub">{{ stats.unique | number }}</span>
+                                </div>
+                                <i class="fa fa-chevron-right fa-2x more"></i>
+                            </a>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <a routerLink="/type/{{ type }}/new" class="dashboard-block">
+                                <div class="rotate">
+                                    <i class="fa fa-asterisk fa-4x"></i>
+                                </div>
+                                <div class="details">
+                                    <span class="title">{{ 'New' | translate }}</span>
+                                    <span class="sub">{{ stats.new | number }}</span>
+                                </div>
+                                <i class="fa fa-chevron-right fa-2x more"></i>
+                            </a>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <div class="dashboard-block">
+                                <div class="rotate">
+                                    <i class="fa fa-line-chart fa-4x"></i>
+                                </div>
+                                <div class="details">
+                                    <span class="title">{{ 'Per Hour' | translate }}</span>
+                                    <span class="sub">{{ stats.avg_per_hour | number }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-bar-chart-o"></i>{{ 'History' | translate }}</div>
+                <div class="panel-body" style="padding: 0px; padding-top: 15px;">
+                    <app-apexchart [options]="apexChart.options" [seriesData]="apexChart.seriesData"></app-apexchart>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-signal"></i>{{ 'Most Frequent' | translate }}</div>
+                <app-stacks [settings]="mostFrequent" [eventType]="eventType"></app-stacks>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-calendar"></i>{{ 'Most Recent' | translate }}</div>
+                <app-events [settings]="mostRecent" [eventType]="eventType"></app-events>
+            </div>
+        </div>
+    </div>
+</div>
